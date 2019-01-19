@@ -8,5 +8,12 @@ b=vec([1 2 3]); # make vector. [1 2 3]'.
 
 using QuadGK
 f(w)= 1.0/(1.0+w.^2)
-g=quadgk(f, -Inf, Inf, rtol=1.0e-16)
-println(g[1])
+g=quadgk(f, 0.0, Inf, rtol=1.0e-16)
+
+println(g[1]*2.0)
+
+using Plots
+#Plots.histogram(randn(1000), bins=100)
+
+N=100000
+Plots.histogram2d(randn(N), randn(N), nbins=300)

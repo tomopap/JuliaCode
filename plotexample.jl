@@ -6,6 +6,8 @@ data1d3=rand(10)
 data2d=[rand()/5 + exp(-(x^2+y^2)/100) for x in -10:10, y in -10:10]
 data1dp=0:2pi/10:2pi;
 
+
+
 function example(no3d=false,forpgf=false)
     plot(
         plot(data1d),
@@ -27,4 +29,5 @@ function example(no3d=false,forpgf=false)
         layout=(4,4),size=(800,800),legend=:none
     )
 end
+
 example(false,false)

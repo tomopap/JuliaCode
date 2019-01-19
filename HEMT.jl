@@ -11,13 +11,13 @@ function Ids_HEMT(vds::Float64, vgs::Float64)
 	beta = 1.0e-3;
 	Wg = 10*um;
 	Lg = 0.2*um;
-	Imax = 30.0;
+	Imax = 1.0;
 	Ngs = 2.0;
 	alpha = 3.0;
-	Vth = -8.0;
+	Vth = -0.5;
 
-    gamma = 1e-2;
-    lambda = 5e-3;
+    gamma = 1e-3;
+    lambda = 1e-4;
     VBR = 6.0;
     IBR = 5e-2;
     NBR = 0.5;
@@ -29,7 +29,7 @@ function Ids_HEMT(vds::Float64, vgs::Float64)
 
 	vgsx = vds <0 ? vgs - vds+vds*gamma : vgs+vds*gamma;
 
-	vgst = vgsx <= Vth ? 0 : vgsx-Vth;
+	vgst = vgsx-Vth <=0 ? 0 : vgsx-Vth;
 
     if vds >=0
          ibr = exp(-VBR/NBR)*(exp((vds)/NBR)-1.0)*IBR;
@@ -44,9 +44,9 @@ function Ids_HEMT(vds::Float64, vgs::Float64)
 
 
 	idsgs = (Imax*(vgst^Ngs)+ibr)/((Imax+vgst^Ngs));
-	idsds = tanh(alpha*vds)+lambda*vds+ibre;
+	idsds = tanh(alpha*vds);
 
-	return K*idsgs*idsds;
+	return K*idsgs*idsds+lambda*vds+ibre;
 end
 
 function HEMTmain()
@@ -56,9 +56,9 @@ function HEMTmain()
 	idsx = zeros(Nds, Ngs)
 	vds = 0.0;
 	vgs = 0.0;
-	vdsmin = -3.0;
-	vdsmax = 11.0;
-	vgsmin = -13.0;
+	vdsmin = -1.0;
+	vdsmax = 5.0;
+	vgsmin = -2.0;
 	vgsmax = 2.0;
 	for j = 1: Ngs
 		vgs = float(j-1)/Ngs*(vgsmax - vgsmin) + vgsmin;
@@ -69,7 +69,7 @@ function HEMTmain()
 		end
 	end
 
-	Plots.plot(vdsx, idsx);
+	Plots.plot(vdsx, idsx, xaxis="Vds", yaxis="Ids", leg=false);
 	#PyPlot.plot(vdsx, idsx);
 	#PyPlot.grid(true)
 end
